@@ -1,5 +1,5 @@
 create table client(
-    num_client INT PRIMARY KEY NOT NULL AUTO_INCREMENT,
+    id INT PRIMARY KEY NOT NULL AUTO_INCREMENT,
     nom varchar(50),
     prenom varchar(50),
     date_de_naissance DATE,
@@ -11,7 +11,7 @@ create table client(
     pays varchar(50),
     code_postal varchar(15),
     id_reservation INT,
-    CONSTRAINT fk_client_reservation FOREIGN KEY (id_reservation) REFERENCES reservation(id_reservation),
+    CONSTRAINT fk_client_reservation FOREIGN KEY (id_reservation) REFERENCES reservation(id),
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
         updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 
@@ -41,14 +41,13 @@ VALUES
 ('Moreau', 'Nicolas', '1995-04-18', 'nicolas.moreau@email.com', 'mdp567', '202 Avenue de la Libération', 'Nice', '06001', 'France', 5, '07 65 43 21 09');
 
 create table reservation(
-    id_reservation INT PRIMARY KEY NOT NULL AUTO_INCREMENT,
+    id INT PRIMARY KEY NOT NULL AUTO_INCREMENT,
     date_reservation DATE,
     assurance_annulation boolean,
     id_paiement INT,
-    CONSTRAINT fk_reservation_paiement FOREIGN KEY (id_paiement) REFERENCES paiement(id_paiement),
+    CONSTRAINT fk_reservation_paiement FOREIGN KEY (id_paiement) REFERENCES paiement(id),
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
         updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
-
 );
 
 INSERT INTO reservation (date_reservation, assurance_annulation, id_paiement)
@@ -75,7 +74,7 @@ VALUES
 ('2024-02-18', 1, 20);
 
 create table paiement(
-    id_paiement INT PRIMARY KEY NOT NULL AUTO_INCREMENT,
+    id INT PRIMARY KEY NOT NULL AUTO_INCREMENT,
     date_de_paiement DATE,
     somme DECIMAL(10,2) NOT NULL
 );
@@ -104,17 +103,17 @@ VALUES
 ('2024-02-26', 95.75);
 
 create table voyage(
-    num_voyage INT PRIMARY KEY NOT NULL AUTO_INCREMENT,
+    id INT PRIMARY KEY NOT NULL AUTO_INCREMENT,
     description_de_la_destination varchar(250),
     nb_place_tolal INT,
     nom_destination varchar(50),
     id_reservation INT,
-    CONSTRAINT fk_voyage_reservation FOREIGN KEY (id_reservation) REFERENCES reservation(id_reservation),
+    CONSTRAINT fk_voyage_reservation FOREIGN KEY (id_reservation) REFERENCES reservation(id),
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
         updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
 
-INSERT INTO voyage (id_reservation, description_de_la_destination, nb_place_tolal, nom_destination)
+INSERT INTO voyage (id_reservation, description_de_la_destination, nb_place_total, nom_destination)
 VALUES (1, 'Description 1', 10, 'Destination 1'),
        (2, 'Description 2', 15, 'Destination 2'),
        (3, 'Description 3', 20, 'Destination 3'),
@@ -137,10 +136,10 @@ VALUES (1, 'Description 1', 10, 'Destination 1'),
         (20, 'Description 20', 11, 'Destination 20');
 
 create table transport(
-    num_transport INT PRIMARY KEY NOT NULL AUTO_INCREMENT,
+    id INT PRIMARY KEY NOT NULL AUTO_INCREMENT,
     type_de_transport varchar(50),
     id_embarquement INT,
-    CONSTRAINT fk_transport_embarquement FOREIGN KEY (id_embarquement) REFERENCES embarquement(id_embarquement),
+    CONSTRAINT fk_transport_embarquement FOREIGN KEY (id_embarquement) REFERENCES embarquement(id),
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
         updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
@@ -169,7 +168,7 @@ VALUES
 ('Bateau', 20);
 
 create table embarquement(
-    id_embarquement INT PRIMARY KEY NOT NULL AUTO_INCREMENT,
+    id INT PRIMARY KEY NOT NULL AUTO_INCREMENT,
     Lieu_embarquement_aller varchar(150),
     Lieu_embarquement_retour varchar(150),
     Lieu_debarquement_aller varchar(150),
@@ -214,7 +213,7 @@ INSERT INTO embarquement (
 
 
 create table periode(
-    id_periode INT  PRIMARY KEY NOT NULL AUTO_INCREMENT,
+    id INT  PRIMARY KEY NOT NULL AUTO_INCREMENT,
     date_debut DATE,
     date_fin DATE,
     tarif DECIMAL(10,2) NOT NULL 
@@ -245,14 +244,14 @@ VALUES
 ('2025-08-05', '2025-08-15', 113.75);
 
 create table voyage_periode (
-    num_voyage INT,
-    CONSTRAINT fk_voyage_periode_voyage FOREIGN KEY (num_voyage) REFERENCES voyage(num_voyage),
+    id_voyage INT,
+    CONSTRAINT fk_voyage_periode_voyage FOREIGN KEY (id_voyage) REFERENCES voyage(id),
     id_periode INT,
-    CONSTRAINT fk_voyage_periode_periode FOREIGN KEY (id_periode) REFERENCES periode(id_periode)
+    CONSTRAINT fk_voyage_periode_periode FOREIGN KEY (id_periode) REFERENCES periode(id)
 );
 create table voyage_transport (
-    num_voyage INT,
-    CONSTRAINT fk_voyage_transport_voyage FOREIGN KEY (num_voyage) REFERENCES voyage(num_voyage),
-    num_transport INT,
-    CONSTRAINT fk_voyage_transport_transport FOREIGN KEY (num_transport) REFERENCES transport(num_transport)
+    id_voyage INT,
+    CONSTRAINT fk_voyage_transport_voyage FOREIGN KEY (id_voyage) REFERENCES voyage(id),
+    id_transport INT,
+    CONSTRAINT fk_voyage_transport_transport FOREIGN KEY (id_transport) REFERENCES transport(id)
 );
